@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface Todo {
   id: number;
@@ -8,17 +8,27 @@ interface Todo {
 
 interface TodoListProps {
   todos: Todo[];
+  onToggle: (id: number) => void;
 }
 
-const TodoList = ({ todos }: TodoListProps) => {
+const TodoList = ({ todos, onToggle }: TodoListProps) => {
   const [items, setItems] = useState<Todo[]>(todos);
+  
+  // Update local state when props change
+  useEffect(() => {
+    setItems(todos);
+  }, [todos]);
 
   const toggleTodo = (id: number) => {
+    // Update local state for immediate UI feedback
     setItems(
       items.map((todo) =>
         todo.id === id ? { ...todo, completed: !todo.completed } : todo
       )
     );
+    
+    // Call the parent handler to update the backend
+    onToggle(id);
   };
 
   if (items.length === 0) {

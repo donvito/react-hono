@@ -36,6 +36,28 @@ function App() {
     fetchTodos();
   }, []);
 
+  const updateTodo = async (id: number, changes: Partial<Todo>) => {
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || '';
+      const response = await fetch(`${apiUrl}/api/todos/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(changes),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update todo');
+      }
+
+      const updatedTodo = await response.json();
+      setTodos(todos.map(todo => todo.id === id ? updatedTodo : todo));
+    } catch (err) {
+      setError('Error updating todo');
+    }
+  };
+
   return (
     <div className="app">
       <h1>React + Hono Todo App</h1>
@@ -44,7 +66,7 @@ function App() {
       {error && <p className="error">{error}</p>}
       
       {!loading && !error && (
-        <TodoList todos={todos} />
+        <TodoList todos={todos} onToggle={(id) => updateTodo(id, { completed: !todos.find(t => t.id === id)?.completed })} />
       )}
     </div>
   );
