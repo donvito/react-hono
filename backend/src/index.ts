@@ -35,10 +35,10 @@ api.get('/todos', (c) => {
 app.route('', api);
 
 // Start the server
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 80;
 console.log(`Server is running on port ${port}`);
 
 serve({
   fetch: app.fetch,
   port: Number(port),
-}); 
+});
