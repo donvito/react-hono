@@ -16,7 +16,9 @@ function App() {
   useEffect(() => {
     const fetchTodos = async () => {
       try {
-        const response = await fetch('/api/todos');
+        // Use API URL from environment variable in production, fallback to relative path for development
+        const apiUrl = import.meta.env.VITE_API_URL || '';
+        const response = await fetch(`${apiUrl}/api/todos`);
         
         if (!response.ok) {
           throw new Error('Failed to fetch todos');

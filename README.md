@@ -70,6 +70,17 @@ Both applications have a `nixpacks.toml` configuration file ready for deployment
 
 - `GET /api/todos` - Get list of todos
 
+## Environment Variables
+
+### Frontend
+
+- `VITE_API_URL` - Base URL for the API in production (leave empty for development)
+
+Example `.env` file for frontend production:
+```
+VITE_API_URL=https://your-api-domain.com
+```
+
 ## Features
 
 - React frontend with TypeScript
