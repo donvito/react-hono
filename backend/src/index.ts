@@ -20,15 +20,34 @@ app.get('/', (c) => {
 // API endpoints
 const api = new Hono().basePath('/api');
 
-// Todo API endpoint
+// In-memory todos storage
+let todos = [
+  { id: 1, title: 'Learn Hono', completed: true },
+  { id: 2, title: 'Build an API with Hono', completed: false },
+  { id: 3, title: 'Deploy with Nixpacks', completed: false },
+  { id: 4, title: 'Deploy with Nixpacks', completed: false }
+];
+
+// Todo API endpoints
 api.get('/todos', (c) => {
-  const todos = [
-    { id: 1, title: 'Learn Hono', completed: true },
-    { id: 2, title: 'Build an API with Hono', completed: false },
-    { id: 3, title: 'Deploy with Nixpacks', completed: false },
-    { id: 4, title: 'Deploy with Nixpacks', completed: false }
-  ];
   return c.json(todos);
+});
+
+api.put('/todos/:id', async (c) => {
+  const id = Number(c.req.param('id'));
+  const body = await c.req.json();
+  
+  const todoIndex = todos.findIndex(todo => todo.id === id);
+  if (todoIndex === -1) {
+    return c.json({ error: 'Todo not found' }, 404);
+  }
+
+  todos[todoIndex] = {
+    ...todos[todoIndex],
+    ...body
+  };
+
+  return c.json(todos[todoIndex]);
 });
 
 // Mount the API routes
